@@ -61,23 +61,20 @@ Use o Docker Desktop ou a extensão Docker no VSCode para visualizar containers.
 ## Inicio do Comentário pessoal
 
 Para evitar conflitos de porta, é necessário mapear a porta do container MySQL para a porta da máquina local. Abaixo está o comando para iniciar o container MySQL mapeando a porta 3306 do container para a porta 3306 da máquina local:
-
-   ```bash 
-   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306
+ 
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306
 
 No comando acima, a opção -p 3306:3306 mapeia a porta do container para a mesma porta na máquina local, garantindo que ambas estejam sincronizadas.
 
 Para rodar o container em segundo plano e não bloquear o terminal, adicione a opção -d ao comando:
 
-   ```bash
-   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
 
 Nota: Use o nome mysql para o container, pois este foi o nome atribuído ao baixar a imagem do Docker Hub.
 
 Alternativamente, você pode usar o seguinte script para criar um container MySQL com um banco de dados e usuário específico:
 
-   ```bash
-   docker run --name banco-dados -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=servidor-java -e MYSQL_USER=meu-nome -e MYSQL_PASSWORD=123456 -p 3306:3306 -d mysql:8.0
+docker run --name banco-dados -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=servidor-java -e MYSQL_USER=meu-nome -e MYSQL_PASSWORD=123456 -p 3306:3306 -d mysql:8.0
 
 Após executar esses comandos, você poderá visualizar o container em execução na extensão Docker do VSCode, com detalhes do banco de dados do lado direito.
 
@@ -103,50 +100,59 @@ Para utilizar a extensão Database Client, basta instalá-la e seguir as instru�
 # Testar Conexão com MySQL
 
 1. **Iniciar Container MySQL:**
-docker exec -it mysql mysql -u root -p
+   ```bash
+   docker exec -it mysql mysql -u root -p
 
 1.1 Digite a senha definida para o banco.
 
 2. **Selecionar o database que iremos utilizar**
-comando: USE nome-do-servidor/banco
+   ```bash
+   USE nome-do-servidor/banco
 
 ***Serve para eu chamar a tabela/servidor que vou inserir dados. Preciso me atentar no nome que dei no processo lá em cima, no momento da criação.***
 
 3. **Criar Banco de Dados e Tabelas:**
 
-CREATE TABLE users (
-    id int NOT NULL,
-    first_name varchar(255) NOT NULL,
-    last_name varchar(255),
-    email varchar(255),
-    gender varchar(255)
-);
+   ```bash
+      CREATE TABLE users (
+         id int NOT NULL,
+         first_name varchar(255) NOT NULL,
+         last_name varchar(255),
+         email varchar(255),
+         gender varchar(255)
+      );
 
 3. **Inserir Dados:**
 
-INSERT INTO users (id, first_name, last_name, gender, email) VALUES (1, 'Teste', 'Teste', 'male', 'teste@gmail.com');
+   ```bash
+      INSERT INTO users (id, first_name, last_name, gender, email) VALUES (1, 'Teste', 'Teste', 'male', 'teste@gmail.com');
 
 4. **Consultar Dados:**
-SELECT * FROM users;
-
+   ```bash
+   SELECT * FROM users;
 
 ## Configuração e Definição da Conexão com o BackEnd
 
 # Compilar e Rodar o Projeto Java
 
 1. **Configurar Java 17:**
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+   ```bash
+   export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
 1.1 **Verificar versão do Java e saber se está correta**
+
 java -version
 
 2. **Limpar e Buildar Projeto:**
-mvn clean
+   
+   ```bash
+      mvn clean
 
 2.2 mvn -Dmaven.test.skip=true package
 
 3. **Executar Aplicação:**
-mvn spring-boot:run
+   ```bash
+   mvn spring-boot:run
 
 # Configuração do BackEnd
 
@@ -175,14 +181,16 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 
 3. **Criar Imagem Docker:**
-docker build -t back-end .
+   ```bash
+   docker build -t back-end .
 
 4. **Executar Container do BackEnd:**
-docker run --name backend --network my_network -p 8080:8080 back-end
+   ```bash
+   docker run --name backend --network my_network -p 8080:8080 back-end
 
 5. **Verificar JAR Gerado:**
-ls target
-
+   ```bash
+   ls target
 
 ## Configuração e Definição da Conexão com o FrontEnd
 
@@ -220,13 +228,16 @@ docker run --name react-app -p 3000:3000 front-end
 ## Juntar Tudo com Docker Network
 
 1. **Criar Network:**
-docker network create my_network
+   ```bash
+   docker network create my_network
 
 2. **Conectar Containers à Network:**
-docker network connect my_network mysql
+   ```bash
+   docker network connect my_network mysql
 
 3. **Rodar Container do BackEnd na Network:**
-docker run --name backend --network my_network -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/javamysqldb -e SPRING_DATASOURCE_USERNAME=myuser -e SPRING_DATASOURCE_PASSWORD=123456 back-end
+   ```bash
+   docker run --name backend --network my_network -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/javamysqldb -e SPRING_DATASOURCE_USERNAME=myuser -e SPRING_DATASOURCE_PASSWORD=123456 back-end
 
 ## Testar Aplicação
 
@@ -238,7 +249,8 @@ docker run --name backend --network my_network -p 8080:8080 -e SPRING_DATASOURCE
 Verifique se os dados no application.properties estão corretos.
 
 3. **Verificar Banco de Dados:**
-SHOW DATABASES;
+   ```bash
+   SHOW DATABASES;
 
 4. Se mostrar a tabela, significa que deu certo o processo.
 
