@@ -40,17 +40,21 @@
 ***"meubancomysql" é o nome do container e "123456" é a senha. "mysql" será o nome da Imagem que ficará armazenada no Docker***
 
 2. **Verificar Containers Ativos:**
-docker ps
+   ```bash 
+   docker ps
 
 3. **Avaliação pelo Docker Desktop/VSCode:**
 Use o Docker Desktop ou a extensão Docker no VSCode para visualizar containers.
 
 4. **Iniciar Container:**
-docker start <ID>
+   ```bash
+   docker start <ID>
+
 ***Substitua <ID> pelo ID do container (por exemplo, "c3").***
 
 5. **Remover Container:**
-docker rm <ID>
+   ```bash
+   docker rm <ID>
 
 # Foto aqui. Deixei as imagens no One Note pois eu preciso das evidências
 
@@ -58,19 +62,22 @@ docker rm <ID>
 
 Para evitar conflitos de porta, é necessário mapear a porta do container MySQL para a porta da máquina local. Abaixo está o comando para iniciar o container MySQL mapeando a porta 3306 do container para a porta 3306 da máquina local:
 
-docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306
+   ```bash 
+   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306
 
 No comando acima, a opção -p 3306:3306 mapeia a porta do container para a mesma porta na máquina local, garantindo que ambas estejam sincronizadas.
 
 Para rodar o container em segundo plano e não bloquear o terminal, adicione a opção -d ao comando:
 
-docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
+   ```bash
+   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
 
 Nota: Use o nome mysql para o container, pois este foi o nome atribuído ao baixar a imagem do Docker Hub.
 
 Alternativamente, você pode usar o seguinte script para criar um container MySQL com um banco de dados e usuário específico:
 
-docker run --name banco-dados -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=servidor-java -e MYSQL_USER=meu-nome -e MYSQL_PASSWORD=123456 -p 3306:3306 -d mysql:8.0
+   ```bash
+   docker run --name banco-dados -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=servidor-java -e MYSQL_USER=meu-nome -e MYSQL_PASSWORD=123456 -p 3306:3306 -d mysql:8.0
 
 Após executar esses comandos, você poderá visualizar o container em execução na extensão Docker do VSCode, com detalhes do banco de dados do lado direito.
 
@@ -84,8 +91,9 @@ Para utilizar a extensão Database Client, basta instalá-la e seguir as instru�
 2. Clicar no + que possui ao clicar no servidor do MySQL
 3. Vai ter o comando:
 
-CREATE DATABASE 
-    DEFAULT CHARACTER SET = 'utf8mb4';
+   ```bash
+      CREATE DATABASE 
+         DEFAULT CHARACTER SET = 'utf8mb4';
 
 4. Inserir o nome que vou usar, neste caso coloquei o mesmo do professo: javamysqldb
 5. Clicar em executar
