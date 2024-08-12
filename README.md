@@ -212,7 +212,7 @@ WORKDIR /app
 # Copia o arquivo JAR para o contêiner
 COPY target/javamysql-0.0.1-SNAPSHOT.jar app.jar
 
-# Expõe a porta que a aplicação está usando
+# Expõe a porta que a aplicação está usando. Para ficar mais simples, é a porta que vamos utilizar no postman, no navegador, Swagger, entre outros.
 EXPOSE 8080
 
 # Comando para rodar a aplicação
@@ -236,6 +236,8 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # Configuração do FrontEnd
 
+***Vamos criar o front para testar a aplicação funcionando. Foi o último pedido no documento que nosso professor enviou. Neste caso, vamos criar um formulário simples, que faça os inputs no banco de dados.***
+
 1. **Dockerfile para FrontEnd:**
 
 Crie um Dockerfile para o projeto frontend:
@@ -244,25 +246,37 @@ Crie um Dockerfile para o projeto frontend:
 
 ***Copiar código e colar no documento Dockerfile:***
 
+```
+# Use a imagem base do Node.js, da mesma forma que fariamos se fossemos baixar uma nova versão
 FROM node:latest
 
+# Criar uma nova pasta de trabalho
 WORKDIR /app
 
+# Copiar o arquivo package.json para o contêiner
 COPY package*.json ./
 
+# Rodar a aplicação
 RUN npm install
 
+# Copiar tudo da aplicação
 COPY . .
 
+# Definir a porta que iremos trabalhar no front
 EXPOSE 3000
 
+# Rodar a aplicação
 CMD [ "npm", "start" ]
 
+```
+
 2. **Criar Imagem Docker do FrontEnd:**
-docker build -t front-end .
+   ```bash
+      docker build -t front-end .
 
 3. **Executar Container do FrontEnd:**
-docker run --name react-app -p 3000:3000 front-end
+   ```bash
+      docker run --name react-app -p 3000:3000 front-end
 
 
 ## Juntar Tudo com Docker Network
