@@ -1,5 +1,27 @@
 # Projeto Java com MySQL e Docker
 
+## Etapas que iremos executar neste projeto
+1. Criar um projeto Java
+2. Criar um projeto com banco de dados MYSQL
+3. Criar um projeto com frontend para fazer inputs no banco
+4. Utilizar o Docker Desktop, Extensão do MYSQL no VsCode, Utilizar Extensão do Docker no VsCode
+5. Realizar os processos no terminal e nas ferramentas
+6. Criar uma imagem do MySQL
+7. Criar um container do MySQL
+8. Conectar ao container do MySQL
+9. Criar uma tabela no container do MySQL
+10. Inserir dados na tabela do MySQL
+11. Consultar os dados da tabela do MySQL
+12. Atualizar os dados da tabela do MySQL
+13. Deletar os dados da tabela do MySQL
+14. Deletar o container do MySQL
+15. Criar uma imagem do BackEnd
+16. Criar um container do BackEnd
+17. Conectar ao container do BackEnd
+18. Criar uma imagem do FrontEnd
+19. Criar um container do FrontEnd
+20. Conectar ao container do FrontEnd
+
 ## Configuração e Definição da Conexão com o Banco de Dados em MySQL
 
 ### Extensão Database Client
@@ -30,6 +52,18 @@
 3. **Uso do Docker Desktop:**
    - A extensão pode ser utilizada juntamente com o Docker Desktop.
    - Link para baixar o Docker Desktop: [Docker Desktop](https://www.docker.com/).
+
+## Docker Desktop
+
+1. Instalar o Docker Desktop
+2. Acessar o site: https://www.docker.com/get-started/
+3. Baixar o Docker Desktop
+4. Instalar o Docker Desktop
+5. Verificar se o Docker está funcionando corretamente.
+   5.1 Abrir o terminal na máquina. 
+   5.2 Digitar o domando docker ps
+   5.3 Ele precisa mostrar uma tabela neste modelo:
+   **CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES**
 
 ### Criar Integração com o Banco no Terminal
 
