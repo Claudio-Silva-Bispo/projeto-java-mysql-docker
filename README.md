@@ -40,6 +40,7 @@
 1.1 **Inserir -dp para rodar em segundo plano e não fechar o terminal**
    ```bash
    docker run --name meubancomysql -e MYSQL_ROOT_PASSWORD=123456 mysql -dp
+   ```
 
 ***"meubancomysql" é o nome do container e "123456" é a senha. "mysql" será o nome da Imagem que ficará armazenada no Docker. A Imagem é diferente do nome que damos ao banco***
 
