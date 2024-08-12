@@ -202,6 +202,7 @@ Crie um Dockerfile para definir a imagem do Docker.
 
 ***Exemplo do documento***
 
+```
 # Use a imagem base do OpenJDK 17
 FROM openjdk:17-jdk-slim
 
@@ -217,6 +218,7 @@ EXPOSE 8080
 # Comando para rodar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
+```
 
 3. **Criar Imagem Docker:**
    ```bash
