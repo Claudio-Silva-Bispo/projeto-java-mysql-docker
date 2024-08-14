@@ -60,10 +60,11 @@
 3. Baixar o Docker Desktop
 4. Instalar o Docker Desktop
 5. Verificar se o Docker está funcionando corretamente.
-   5.1 Abrir o terminal na máquina. 
-   5.2 Digitar o domando docker ps
-   5.3 Ele precisa mostrar uma tabela neste modelo:
-   **CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES**
+5.1 Abrir o terminal na máquina. 
+5.2 Digitar o domando docker ps
+5.3 Ele precisa mostrar uma tabela neste modelo:
+
+**CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES**
 
 ### Criar Integração com o Banco no Terminal
 
