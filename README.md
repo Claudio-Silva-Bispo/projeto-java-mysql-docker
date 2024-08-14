@@ -73,7 +73,7 @@
 
 1.1 **Inserir -dp para rodar em segundo plano e não fechar o terminal**
    ```bash
-   docker run --name meubancomysql -e MYSQL_ROOT_PASSWORD=123456 mysql -dp
+   docker run --name meubancomysql -e -d MYSQL_ROOT_PASSWORD=123456 mysql 
    ```
 
 ***"meubancomysql" é o nome do container e "123456" é a senha. "mysql" será o nome da Imagem que ficará armazenada no Docker. A Imagem é diferente do nome que damos ao banco***
@@ -88,6 +88,11 @@ Use o Docker Desktop ou a extensão Docker no VSCode para visualizar containers.
 4. **Iniciar Container:**
    ```bash
    docker start <ID>
+
+4.1 **Parar Container**
+   ```bash
+   docker stop <ID>
+   ```
 
 ***Substitua <ID> pelo ID do container (por exemplo, "c3").***
 
@@ -104,7 +109,7 @@ Use o Docker Desktop ou a extensão Docker no VSCode para visualizar containers.
 Para evitar conflitos de porta, é necessário mapear a porta do container MySQL para a porta da máquina local. Abaixo está o comando para iniciar o container MySQL mapeando a porta 3306 do container para a porta 3306 da máquina local:
    
    ```bash
-   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306
+   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:latest
    ```
 
 ou
@@ -157,25 +162,21 @@ Para utilizar a extensão Database Client, basta instalá-la e seguir as instru�
 # Criar a conexão usando comando
 
 1. Abri consulta
- ```bash
-   docker exec -it bancodados  mysql -u root -p
+```bash
+      docker exec -it nomebanco nomedaimagem -u root -p
+      docker exec -it mysql mysql -u root -p
+```
 
 2. Criar a tabela
-   ```bash
-   CREATE TABLE nome
-      DEFAULT CHARACTER SET = 'utf8mb4';
-
-   ```
+```bash
+      CREATE DATABASE nome_do_banco;
+```
 
 # Testar Conexão com MySQL
 
-1. **Iniciar Container MySQL:**
-   ```bash
-   docker exec -it nomebanco nomedaimagem -u root -p
-
 ***Eu estou usando bancodados e Imagem com mysql***
 
-1.1 Digite a senha definida para o banco.
+1 Digite a senha definida para o banco.
 
 2. **Selecionar o database que iremos utilizar**
    ```bash
@@ -206,6 +207,8 @@ Para utilizar a extensão Database Client, basta instalá-la e seguir as instru�
 
 ## Configuração e Definição da Conexão com o BackEnd
 
+***No projeto, isso no VsCODE, acessar a pasta que o projeto está hospedado e rodar os comandos abaixo.***
+
 # Compilar e Rodar o Projeto Java
 
 1. **Configurar Java 17:**
@@ -226,6 +229,83 @@ java -version
 3. **Executar Aplicação:**
    ```bash
    mvn spring-boot:run
+
+## Tratar possíveis erros
+
+1. Se a conexão não for bem sucedida, tentar os comandos abaixo.
+
+Certifique-se de que o usuário myuser foi criado no MySQL com as permissões adequadas:
+Execute os seguintes comandos no MySQL para garantir que o usuário foi criado corretamente e tem acesso ao banco de dados javamysqldb.
+
+```bash
+CREATE USER 'myuser'@'%' IDENTIFIED BY '123456';
+GRANT ALL PRIVILEGES ON javamysqldb.* TO 'myuser'@'%';
+FLUSH PRIVILEGES;
+```
+
+2. Verifique o endereço IP do contêiner:
+O erro também pode ser causado se o contêiner MySQL estiver usando um IP que não está permitido para o usuário myuser. Tente permitir o acesso a partir de qualquer host usando myuser:
+
+```bash
+GRANT ALL PRIVILEGES ON javamysqldb.* TO 'myuser'@'%' IDENTIFIED BY '123456';
+FLUSH PRIVILEGES;
+``` 
+3. Verifique se o contêiner MySQL está acessível:
+Certifique-se de que o contêiner MySQL está rodando e escutando na porta correta (3306). Você pode verificar isso executando o comando:
+
+```bash
+docker ps
+```
+
+4. Reiniciar o container
+```bash
+docker stop CONTAINER_ID
+```
+4.1 
+```bash
+docker start CONTAINER_ID
+```
+5. Rodar o projeto do back de novo
+
+5.1. **Limpar e Buildar Projeto:**
+   
+```bash
+      mvn clean
+``` 
+
+5.2. 
+```bash
+mvn -Dmaven.test.skip=true package
+```
+
+3. **Executar Aplicação:**
+```bash
+   mvn spring-boot:run
+```
+
+## Criar visualização usando o Swagger
+
+***Este processo visa nos ajudar a avaliar os serviços que foram criados e se testar o funcionamento deles***
+
+1. Abrir o arquivo pom.xml e adicionar uma nova dependência
+**Estou seguindo este arquivo como base https://springdoc.org/**
+
+```bash
+   <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.6.0</version>
+   </dependency>
+```
+
+2. Depois de rodar a aplicação, testar no navegador usando a rota:
+```bash
+http://localhost:8080/swagger-ui/index.html
+```
+3. Como saber que deu certo?
+**Vai mostrar os Controlles e Serviços**
+
+4. Depois disso, pode seguir os próximos passos, para inserir o projeto no Docker.
 
 # Configuração do BackEnd
 
