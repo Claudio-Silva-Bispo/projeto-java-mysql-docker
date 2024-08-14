@@ -67,17 +67,29 @@
 
 ### Criar Integração com o Banco no Terminal
 
-1. **Criar Conexão com o Banco:**
+1. **Criar Conexão com o Banco pararando/bloqueando o terminar:**
 ```bash
-   docker run --name meubancomysql -e MYSQL_ROOT_PASSWORD=123456 mysql
+   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 mysql:latest
 ```
 
 1.1 **Inserir -dp para rodar em segundo plano e não fechar o terminal**
 ```bash
-   docker run --name meubancomysql -e -d MYSQL_ROOT_PASSWORD=123456 mysql 
+   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -d -p 3306:3306 mysql:latest
+```
+***Atenção: neste modelo, não estamos definindo as portas. Tenho um processo abaixo completo e com definição das portas que iremos utilizar no projeto final***
+
+1.2 **Criar o Container em uma Network que será usada em grupo com Back e Banco por exemplo**
+
+```bash
+   docker network create my_network
 ```
 
-***"meubancomysql" é o nome do container e "123456" é a senha. "mysql" será o nome da Imagem que ficará armazenada no Docker. A Imagem é diferente do nome que damos ao banco***
+```bash
+   docker run --name mysql --network my_network -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:latest
+```
+**Esse processo será explicado melhor no final do documento. Se não quiser seguir com a network, só tirar essa parte do script e rodar o projeto de forma isolada**
+
+***"meubancomysql" é o nome do container e "123456" é a senha. "mysql" será o nome da Imagem que ficará armazenada no Docker. A Imagem é diferente do nome que damos ao banco e no final, a versão do myq por exemplo "msql:lastest" que será baixada a última versão.***
 
 2. **Verificar Containers Ativos:**
 ```bash 
@@ -126,7 +138,7 @@ No comando acima, a opção -p 3306:3306 mapeia a porta do container para a mesm
 Para rodar o container em segundo plano e não bloquear o terminal, adicione a opção -d ao comando:
 
 ```bash
-   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
+   docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:latest
 ```
 
 Nota: Use o nome mysql para o container, pois este foi o nome atribuído ao baixar a imagem do Docker Hub.
@@ -179,7 +191,7 @@ Para utilizar a extensão Database Client, basta instalá-la e seguir as instru�
 
 2. **Selecionar o database que iremos utilizar**
 ```bash
-   USE nome-do-servidor/banco
+   USE nome-do-servidor/banco;
 ```
 
 ***Serve para eu chamar a tabela/servidor que vou inserir dados. Preciso me atentar no nome que dei no processo lá em cima, no momento da criação.***
@@ -245,29 +257,38 @@ java -version
 Certifique-se de que o usuário myuser foi criado no MySQL com as permissões adequadas:
 Execute os seguintes comandos no MySQL para garantir que o usuário foi criado corretamente e tem acesso ao banco de dados javamysqldb.
 
+1. Abri consulta
 ```bash
-CREATE USER 'myuser'@'%' IDENTIFIED BY '123456';
-GRANT ALL PRIVILEGES ON javamysqldb.* TO 'myuser'@'%';
-FLUSH PRIVILEGES;
+   docker exec -it nomebanco nomedaimagem -u root -p
+   docker exec -it mysql mysql -u root -p
+```
+
+1.1.
+```bash
+   CREATE USER 'myuser'@'%' IDENTIFIED BY '123456';
+   GRANT ALL PRIVILEGES ON javamysqldb.* TO 'myuser'@'%';
+   FLUSH PRIVILEGES;
 ```
 
 2. Verifique o endereço IP do contêiner:
 O erro também pode ser causado se o contêiner MySQL estiver usando um IP que não está permitido para o usuário myuser. Tente permitir o acesso a partir de qualquer host usando myuser:
 
 ```bash
-GRANT ALL PRIVILEGES ON javamysqldb.* TO 'myuser'@'%' IDENTIFIED BY '123456';
-FLUSH PRIVILEGES;
+   GRANT ALL PRIVILEGES ON javamysqldb.* TO 'myuser'@'%' IDENTIFIED BY '123456';
+   FLUSH PRIVILEGES;
 ``` 
+2.1. Encerrar sessão no terminal com command + z ou ctrl + C
+
 3. Verifique se o contêiner MySQL está acessível:
 Certifique-se de que o contêiner MySQL está rodando e escutando na porta correta (3306). Você pode verificar isso executando o comando:
 
 ```bash
-docker ps
+   docker ps
 ```
 
 4. Reiniciar o container
 ```bash
-docker stop CONTAINER_ID
+   docker stop CONTAINER_ID
 ```
 4.1 
 ```bash
@@ -278,12 +299,12 @@ docker start CONTAINER_ID
 5.1. **Limpar e Buildar Projeto:**
    
 ```bash
-      mvn clean
+   mvn clean
 ``` 
 
 5.2. 
 ```bash
-mvn -Dmaven.test.skip=true package
+   mvn -Dmaven.test.skip=true package
 ```
 
 3. **Executar Aplicação:**
@@ -407,27 +428,57 @@ CMD [ "npm", "start" ]
 ```
 
 ## Juntar Tudo com Docker Network
+***De forma isolada, cada um funciona. Quando se trata de rodar os dois ao mesmo tempo no sistema Docker, eles precisam (Banco e Back) estarem na mesma Network***
 
-1. **Criar Network:**
+1. **Listar as Network existentes na máquina**
+```bash
+   docker network ls
+```
+
+2. **Apagar todas as redes de for necessário - Tomar cuidado aqui**
+```bash
+   docker network prune
+```
+
+2.1 **Apagar uma específica**
+```bash
+   docker network rm <network_name>
+```
+
+3. **Criar Network:**
 ```bash
    docker network create my_network
 ```
 
-2. **Conectar Containers à Network:**
+4. Consultar em qual Network os containers mysql e back-end estão:
+
+```bash
+   docker inspect mysql | grep NetworkMode
+```
+
+```bash
+   docker inspect back-end | grep NetworkMode
+```
+
+2. **Conectar um dos Containers à Network:**
 ```bash
    docker network connect my_network mysql
 ```
 
-3. **Rodar Container do BackEnd na Network:**
 ```bash
-   docker run --name backend --network my_network -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/javamysqldb -e SPRING_DATASOURCE_USERNAME=myuser -e SPRING_DATASOURCE_PASSWORD=123456 back-end
+   docker network connect my_nerwork back-end
+```
+
+**Exemplo para Rodar Container do BackEnd na Network:**
+```bash
+   docker run --name backend --network my_network -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:mysql://meubancomysql:3306/javamysqldb -e SPRING_DATASOURCE_USERNAME=myuser -e SPRING_DATASOURCE_PASSWORD=123456 back-end
 ```
 
 ## Testar Aplicação
 
 1. **Verificar Funcionamento:**
 
-1.1 Use o Postman ou navegador para testar a API e o banco de dados.
+1.1 Use o Postman, Swagger ou navegador para testar a API e o banco de dados.
 
 2. **Confirmar Configurações:**
 Verifique se os dados no application.properties estão corretos.
