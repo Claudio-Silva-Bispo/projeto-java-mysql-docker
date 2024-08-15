@@ -232,8 +232,9 @@ Para utilizar a extensão Database Client, basta instalá-la e seguir as instru�
 ```
 
 1.1 **Verificar versão do Java e saber se está correta**
-
-java -version
+```bash
+   java -version
+```
 
 2. **Limpar e Buildar Projeto:**
    
