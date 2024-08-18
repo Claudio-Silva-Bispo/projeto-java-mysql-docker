@@ -452,7 +452,7 @@ CMD [ "npm", "start" ]
    docker network create my_network
 ```
 
-4. Consultar em qual Network os containers mysql e back-end estão:
+4. **Consultar em qual Network os containers mysql e back-end estão:**
 
 ```bash
    docker inspect mysql | grep NetworkMode
@@ -462,13 +462,18 @@ CMD [ "npm", "start" ]
    docker inspect back-end | grep NetworkMode
 ```
 
-2. **Conectar um dos Containers à Network:**
+5. **Conectar um dos Containers à Network:**
 ```bash
    docker network connect my_network mysql
 ```
 
 ```bash
    docker network connect my_nerwork back-end
+```
+
+6. **Se precisar consultar as portas ativas dentro de cada network**
+```bash
+   docker network inspect javamysql-network
 ```
 
 **Exemplo para Rodar Container do BackEnd na Network:**
